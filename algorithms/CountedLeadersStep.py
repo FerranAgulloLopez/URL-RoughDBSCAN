@@ -3,7 +3,7 @@ from sklearn.base import BaseEstimator, ClusterMixin, TransformerMixin
 from scipy.spatial import distance
 
 
-class CountedLeaders(BaseEstimator, ClusterMixin, TransformerMixin):
+class CountedLeadersStep(BaseEstimator, ClusterMixin, TransformerMixin):
 
     def __init__(self, threshold_distance):
         self.threshold_distance = threshold_distance
