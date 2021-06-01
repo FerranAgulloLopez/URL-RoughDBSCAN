@@ -7,10 +7,10 @@ from collections import deque
 
 class RoughDBSCAN(BaseEstimator, ClusterMixin, TransformerMixin):
 
-    def __init__(self, threshold_distance_leaders, threshold_distance, min_points):
+    def __init__(self, threshold_distance_leaders, threshold_distance, min_points, counted_leaders=CountedLeadersStep):
         self.threshold_distance = threshold_distance
         self.min_points = min_points
-        self.counted_leaders_algorithm = CountedLeadersStep(threshold_distance_leaders)
+        self.counted_leaders_algorithm = counted_leaders(threshold_distance_leaders)
 
     # Shared clustering methods
 

@@ -1,7 +1,6 @@
 import numpy as np
 from sklearn.base import BaseEstimator, ClusterMixin, TransformerMixin
 from sklearn.neighbors import BallTree
-from time import time
 
 
 class CountedLeadersStructureFull(BaseEstimator, ClusterMixin, TransformerMixin):
@@ -26,7 +25,6 @@ class CountedLeadersStructureFull(BaseEstimator, ClusterMixin, TransformerMixin)
         self.samples_leaders = np.zeros(X.shape[0])  # array to store the leader index that each sample pertain to
         ball_tree = BallTree(X, metric='euclidean')
 
-        init_time = time()
         if X.shape[0] > 0:
             # initialize arrays with the first sample
             self.leaders_indexes.add(0)
@@ -77,12 +75,7 @@ class CountedLeadersStructureFull(BaseEstimator, ClusterMixin, TransformerMixin)
     # Private methods
 
     def _get_sample_leader_index(self, sample, ball_tree):
-        init_time = time()
-        aux = ball_tree.query_radius([sample], self.threshold_distance)[0]
-        print('meh1:', time() - init_time)
-        init_time = time()
-        close_leaders_indexes = self.leaders_indexes.intersection(set(aux))
-        print('meh2:', time() - init_time)
+        close_leaders_indexes = self.leaders_indexes.intersection(set(ball_tree.query_radius([sample], self.threshold_distance)[0]))
         if len(close_leaders_indexes) > 0:
             return int(self.samples_leaders[close_leaders_indexes.pop()])
         else:

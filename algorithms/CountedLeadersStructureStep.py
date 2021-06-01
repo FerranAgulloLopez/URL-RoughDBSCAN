@@ -1,7 +1,6 @@
 import numpy as np
 from sklearn.base import BaseEstimator, ClusterMixin, TransformerMixin
 from sklearn.neighbors import BallTree
-from time import time
 
 
 class CountedLeadersStructureStep(BaseEstimator, ClusterMixin, TransformerMixin):
@@ -45,17 +44,13 @@ class CountedLeadersStructureStep(BaseEstimator, ClusterMixin, TransformerMixin)
                     self.leaders_values.append(X[index])
                     self.leaders_followers_indexes.append([index])
                     self.samples_leaders[index] = cluster_id
-                    init = time()
                     ball_tree = BallTree(self.leaders_values, metric='euclidean')
-                    meh_time += time() - init
                     cluster_id += 1
                 else:
                     # the sample has a leader
                     # append sample to its leader
                     self.leaders_followers_indexes[sample_leader_index].append(index)
                     self.samples_leaders[index] = sample_leader_index
-
-        print('-------------', meh_time, '....................', self.aux_time)
         return self.samples_leaders
 
     def predict(self, X):
@@ -78,9 +73,7 @@ class CountedLeadersStructureStep(BaseEstimator, ClusterMixin, TransformerMixin)
     # Private methods
 
     def _get_sample_leader_index(self, sample, ball_tree):
-        init = time()
         close_leaders_indexes = ball_tree.query_radius([sample], self.threshold_distance)[0]
-        self.aux_time += time() - init
         if len(close_leaders_indexes) > 0:
             return close_leaders_indexes[0]
         else:
